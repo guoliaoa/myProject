@@ -9,12 +9,24 @@ const session =require('koa-generic-session')
 const redisStore=require('koa-redis')
 
 const {REDIS_CONF}=require('./conf/db')
+const {isProd}=require('./conf/db')//判断当前环境
 
+//路由
+const errorViewRouter=require('./routes/view/error')
 const index = require('./routes/index')
 const users = require('./routes/users')
 
 // error handler
-onerror(app)//是在页面上显示错误的信息
+
+let onerrorConf={}
+
+if(isProd){//如果是线上环境，就暴露出错误页
+  onerrorConf={
+    redirect:'/error'//重定向到error的路由
+  }
+}
+
+onerror(app,onerrorConf)//是在页面上显示错误的信息
 
 // middlewares
 app.use(bodyparser({
@@ -54,9 +66,10 @@ app.use(session({
 //   console.log(`${ctx.method} ${ctx.url} - ${ms}ms`)
 // })手写的koa2中间件的功能
 
-// routes
+// routes  注册
 app.use(index.routes(), index.allowedMethods())
 app.use(users.routes(), users.allowedMethods())
+app.use(errorViewRouter.routes(),errorViewRouter.allowedMethods())//404 的路由一定要注册到最下面，不然它就把所有的路由都匹配了
 
 // error-handling
 app.on('error', (err, ctx) => {

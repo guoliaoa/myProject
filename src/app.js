@@ -12,7 +12,7 @@ const {REDIS_CONF}=require('./conf/db')
 const {isProd}=require('./conf/db')//判断当前环境
 
 //路由
-const errorViewRouter=require('./routes/view/error')
+const errorViewRouter=require('./routes/view/error')//错误信息页和404页
 const index = require('./routes/index')
 const users = require('./routes/users')
 

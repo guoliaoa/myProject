@@ -14,7 +14,7 @@ let MYSQL_CONF={//mysql连接的配置
     user:'root',
     password:'123456',
     port:'3306',
-    database:'koa2_weibo'
+    database:'test'
 
 }
 
@@ -31,7 +31,7 @@ if(isProd){//是生产环境
         user:'root',
         password:'123456',
         port:'3306',
-        database:'koa2_weibo'
+        database:'test'
     
     }
 }

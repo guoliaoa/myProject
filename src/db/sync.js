@@ -6,6 +6,8 @@
 
 const seq=require('./seq')
 
+require('./model/index')//引入数据模型入口文件
+
 //测试连接
  seq.authenticate().then(()=>{
     console.log('ok')

@@ -13,8 +13,10 @@ const {isProd}=require('./conf/db')//判断当前环境
 
 //路由
 const errorViewRouter=require('./routes/view/error')//错误信息页和404页
+const userViewRouter=require('./routes/view/user')
+const userApirouter=require('./routes/api/user')
 const index = require('./routes/index')
-const users = require('./routes/users')
+
 
 // error handler
 
@@ -68,7 +70,9 @@ app.use(session({
 
 // routes  注册
 app.use(index.routes(), index.allowedMethods())
-app.use(users.routes(), users.allowedMethods())
+app.use(userViewRouter.routes(),userViewRouter.allowedMethods())
+app.use(userApirouter.routes(),userApirouter.allowedMethods())
+
 app.use(errorViewRouter.routes(),errorViewRouter.allowedMethods())//404 的路由一定要注册到最下面，不然它就把所有的路由都匹配了
 
 // error-handling

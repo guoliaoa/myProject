@@ -2,9 +2,13 @@
  * @description user controller
  * @author  郭蓼
  */
-const {getUserInfo}=require('../services/user')
+const {getUserInfo,createUser}=require('../services/user')
 const {SuccessModel,ErrorModel}=require('../model/ResModel')
-const {registerUserNameNotExistInfo}=require('../model/ErrorInfo')
+const {registerUserNameNotExistInfo,
+       registerUserNameExistInfo,
+       registerFailInfo}=require('../model/ErrorInfo')
+
+const doCrpyto=require('../utils/crpy')
 
  /**
   * 用户名是否存在
@@ -22,20 +26,34 @@ const {registerUserNameNotExistInfo}=require('../model/ErrorInfo')
     }
 }
 
-//  async function isExist(userName){
-//      //业务逻辑处理（无）
-//      //调用services 获取数据
-//      //返回统一格式
-//      const userInfo=await getUserInfo(userName)
-//      if(userInfo){
-//          //已存在(成功)
-//          return new SuccessModel(userInfo)
-//          //{errno:0,data:{...}}  返回的数据格式
-//      }else{
-//          //不存在(失败)  {errno:10003,message:'用户名未存在'}
-//          return new ErrorModel(registerUserNameNotExistInfo)
-//      }
-//  }
+/**
+ * 
+ * @param {string} userName 
+ * @param {string} password 
+ * @param {number} gender (1 男 2 女 3 保密) 
+ */
+async function register({userName,password,gender}){
+    const userInfo=await getUserInfo(userName)
+    if(userInfo){
+        //用户名已存在
+        return new ErrorModel(registerUserNameExistInfo)
+    }
+    //注册 service
+    try{
+        await createUser({
+            userName,
+            password:doCrpyto(password),
+            gender
+        })
+        //注册成功
+        return new SuccessModel()
+    }catch(ex){
+        console.error(ex.message,ex.stack)
+        return new ErrorModel(registerFailInfo)
+    }
+}
+
  module.exports={
-     isExist
+     isExist,
+     register
  }

@@ -10,6 +10,7 @@ const redisStore=require('koa-redis')
 
 const {REDIS_CONF}=require('./conf/db')
 const {isProd}=require('./conf/db')//判断当前环境
+const {SESSION_SECRET_KEYS}=require('./conf/secretkeys')
 
 //路由
 const errorViewRouter=require('./routes/view/error')//错误信息页和404页
@@ -46,7 +47,7 @@ app.use(views(__dirname + '/views', {
 /**
  * 用户每一次登录都会生成一个cookie,它的名字是weibo.sid,然后把它给客户端，当客户端再次访问的时候，就会带着这个cookie
  */
-app.keys=['ABCdef123_*#'];
+app.keys=[SESSION_SECRET_KEYS];
 app.use(session({
   key:'weibo.sid' , //cookie 的name   它默认是'koa.sid'
   prefix:'weibo:sess:', // redis 的key的前缀，默认是'koa:sess:'

@@ -6,7 +6,7 @@
  const router=require('koa-router')()
 
  router.prefix('/api/user')
- const {isExist,register}=require('../../controller/user')
+ const {isExist,register,login}=require('../../controller/user')
  const userValidate=require('../../validator/user')
  const {genValidator}=require('../../middlewares/validator')
 
@@ -30,6 +30,12 @@
      ctx.body=await isExist(userName)
      
 
+ })
+
+ router.post('/login',async (ctx,next)=>{
+     const {userName,password}=ctx.request.body
+     //调用controller层的接口
+     ctx.body=await login(ctx,userName,password)
  })
 
  module.exports=router

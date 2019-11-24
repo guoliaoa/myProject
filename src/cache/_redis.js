@@ -55,5 +55,6 @@
      return promise
  }
  module.exports={
-     set
+     set,
+     get
  }

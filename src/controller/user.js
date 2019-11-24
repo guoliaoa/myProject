@@ -6,7 +6,8 @@ const {getUserInfo,createUser}=require('../services/user')
 const {SuccessModel,ErrorModel}=require('../model/ResModel')
 const {registerUserNameNotExistInfo,
        registerUserNameExistInfo,
-       registerFailInfo}=require('../model/ErrorInfo')
+       registerFailInfo,
+       loginFailInfo}=require('../model/ErrorInfo')
 
 const doCrpyto=require('../utils/crpy')
 
@@ -53,7 +54,30 @@ async function register({userName,password,gender}){
     }
 }
 
+/**
+ * 
+ * @param {Object} ctx koa2 ctx
+ * @param {string} userName 用户名
+ * @param {string} password 用户密码
+ */
+async function login(ctx,userName,password){
+    //ctx的作用是  登录成功之后ctx.session.userInfo=xxx
+
+    //获取用户信息
+    const userInfo=await getUserInfo(userName,doCrpyto(password))
+    if(!userInfo){
+        //登录失败
+        return new ErrorModel(loginFailInfo)
+    }
+    //登陆成功
+    if (ctx.session.userInfo == null) {
+        ctx.session.userInfo = userInfo
+    }
+    return new SuccessModel()
+}
+
  module.exports={
      isExist,
-     register
+     register,
+     login
  }

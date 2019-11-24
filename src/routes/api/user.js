@@ -7,9 +7,11 @@
 
  router.prefix('/api/user')
  const {isExist,register}=require('../../controller/user')
+ const userValidate=require('../../validator/user')
+ const {genValidator}=require('../../middlewares/validator')
 
  //注册路由  注册
- router.post('/register',async (ctx,next)=>{
+ router.post('/register',genValidator(userValidate),async (ctx,next)=>{
      const {userName,password,gender}=ctx.request.body;
      //调用controller里面的方法
      ctx.body=await register({

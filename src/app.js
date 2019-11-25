@@ -7,6 +7,8 @@ const bodyparser = require('koa-bodyparser')
 const logger = require('koa-logger')
 const session =require('koa-generic-session')
 const redisStore=require('koa-redis')
+const koaStatic=require('koa-static')
+const path=require('path')
 
 const {REDIS_CONF}=require('./conf/db')
 const {isProd}=require('./conf/db')//判断当前环境
@@ -16,6 +18,7 @@ const {SESSION_SECRET_KEYS}=require('./conf/secretkeys')
 const errorViewRouter=require('./routes/view/error')//错误信息页和404页
 const userViewRouter=require('./routes/view/user')
 const userApirouter=require('./routes/api/user')
+const utilsApiRouter=require('./routes/api/utils')
 const index = require('./routes/index')
 
 
@@ -37,7 +40,8 @@ app.use(bodyparser({
 }))
 app.use(json())
 app.use(logger())
-app.use(require('koa-static')(__dirname + '/public'))//koa-static 将public目录下的文件可以当静态资源文件来访问
+app.use(koaStatic(__dirname + '/public'))//koa-static 将public目录下的文件可以当静态资源文件来访问
+app.use(koaStatic(path.join(__dirname,'..','uploadFiles')))
 
 app.use(views(__dirname + '/views', {
   extension: 'ejs'//注册ejs，因为ejs是后端编译的语言，他必须要注册一下才能使用后边编译的功能，否则识别不了ejs的语法
@@ -73,6 +77,7 @@ app.use(session({
 app.use(index.routes(), index.allowedMethods())
 app.use(userViewRouter.routes(),userViewRouter.allowedMethods())
 app.use(userApirouter.routes(),userApirouter.allowedMethods())
+app.use(utilsApiRouter.routes(),utilsApiRouter.allowedMethods())
 
 app.use(errorViewRouter.routes(),errorViewRouter.allowedMethods())//404 的路由一定要注册到最下面，不然它就把所有的路由都匹配了
 

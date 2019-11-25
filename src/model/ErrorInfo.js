@@ -28,6 +28,11 @@
         errno:10005,
         message:'您尚未登录'
     },
+    //修改密码失败
+    changePasswordFailInfo:{
+        errno:10006,
+        message:'修改密码失败'
+    },
     //上传文件失败
     uploadFileSizeFailInfo:{
         errno:10007,

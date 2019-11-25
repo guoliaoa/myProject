@@ -13,7 +13,8 @@ const {registerUserNameNotExistInfo,
        registerFailInfo,
        loginFailInfo,
        deleteUserFailInfo,
-       changeInfoFailInfo
+       changeInfoFailInfo,
+       changePasswordFailInfo
     }=require('../model/ErrorInfo')
 
 const doCrpyto=require('../utils/crpy')
@@ -134,10 +135,43 @@ async function changeInfo(ctx,{nickName,city,picture}){
 
 }
 
+/**
+ * 修改密码
+ * @param {string} userName 要修改密码的用户名
+ * @param {string} password 修改之前的密码
+ * @param {string} newPassword 新密码
+ */
+async function changePassword(userName,password,newPassword){
+    const result=await updateUser({
+        newPassword:doCrpyto(newPassword)
+    },
+    {
+        userName,
+        password:doCrpyto(password)
+    })
+    if(result){
+        //修改成功
+        return new SuccessModel()
+    }
+    //修改失败
+    return new ErrorModel(changePasswordFailInfo)
+}
+
+/**
+ * 退出登录
+ * @param {Object} ctx koa ctx
+ */
+async function logout(ctx){
+    delete ctx.session.userInfo
+    return new SuccessModel()
+}
+
  module.exports={
      isExist,
      register,
      login,
      deleteCurUser,
-     changeInfo
+     changeInfo,
+     changePassword,
+     logout
  }

@@ -103,6 +103,8 @@ async function updateUser({newPassword,newNickName,newCity,newPicture},{password
     return result[0]>0  //修改的行数 
 }
 
+
+
  module.exports={
      getUserInfo,
      createUser,

@@ -2,12 +2,13 @@
  * @description user controller
  * @author  郭蓼
  */
-const {getUserInfo,createUser}=require('../services/user')
+const {getUserInfo,createUser,deleteUser}=require('../services/user')
 const {SuccessModel,ErrorModel}=require('../model/ResModel')
 const {registerUserNameNotExistInfo,
        registerUserNameExistInfo,
        registerFailInfo,
-       loginFailInfo}=require('../model/ErrorInfo')
+       loginFailInfo,
+       deleteUserFailInfo}=require('../model/ErrorInfo')
 
 const doCrpyto=require('../utils/crpy')
 
@@ -76,8 +77,24 @@ async function login(ctx,userName,password){
     return new SuccessModel()
 }
 
+
+/**
+ * 删除当前用户
+ * @param {string} userName 用户名
+ */
+async function deleteCurUser(userName) {
+    const result = await deleteUser(userName)
+    if (result) {
+        // 成功
+        return new SuccessModel()
+    }
+    // 失败
+    return new ErrorModel(deleteUserFailInfo)
+}
+
  module.exports={
      isExist,
      register,
-     login
+     login,
+     deleteCurUser
  }

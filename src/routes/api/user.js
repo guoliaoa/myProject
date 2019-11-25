@@ -6,7 +6,12 @@
  const router=require('koa-router')()
 
  router.prefix('/api/user')
- const {isExist,register,login,deleteCurUser}=require('../../controller/user')
+ const {isExist,
+    register,
+    login,
+    deleteCurUser,
+    changeInfo
+}=require('../../controller/user')
  const userValidate=require('../../validator/user')
  const {genValidator}=require('../../middlewares/validator')
  const {isTest}=require('../../utils/env')
@@ -47,6 +52,13 @@
         const { userName } = ctx.session.userInfo
         ctx.body = await deleteCurUser(userName)
     }
+})
+
+//修改个人信息
+router.patch('/changeInfo',loginCheck,genValidator(userValidate),async (ctx,next)=>{
+    const {nickName,city,picture}=ctx.request.body
+    //调用controller层的方法来修改信息
+    ctx.body=await changeInfo(ctx,{nickName,city,picture})
 })
 
  module.exports=router

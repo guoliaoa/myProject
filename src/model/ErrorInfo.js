@@ -33,6 +33,11 @@
         errno:10007,
         message:'上传文件尺寸过大'
     },
+    //修改用户信息失败
+    changeInfoFailInfo:{
+        errno:10008,
+        message:'修改信息失败'
+    },
     //json schema 校验失败
     jsonSchemaFailInfo:{
         errno:10009,

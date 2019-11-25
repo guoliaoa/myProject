@@ -2,13 +2,19 @@
  * @description user controller
  * @author  郭蓼
  */
-const {getUserInfo,createUser,deleteUser}=require('../services/user')
+const {getUserInfo,
+    createUser,
+    deleteUser,
+    updateUser
+}=require('../services/user')
 const {SuccessModel,ErrorModel}=require('../model/ResModel')
 const {registerUserNameNotExistInfo,
        registerUserNameExistInfo,
        registerFailInfo,
        loginFailInfo,
-       deleteUserFailInfo}=require('../model/ErrorInfo')
+       deleteUserFailInfo,
+       changeInfoFailInfo
+    }=require('../model/ErrorInfo')
 
 const doCrpyto=require('../utils/crpy')
 
@@ -29,7 +35,7 @@ const doCrpyto=require('../utils/crpy')
 }
 
 /**
- * 
+ * 注册用户
  * @param {string} userName 
  * @param {string} password 
  * @param {number} gender (1 男 2 女 3 保密) 
@@ -56,7 +62,7 @@ async function register({userName,password,gender}){
 }
 
 /**
- * 
+ * 登录
  * @param {Object} ctx koa2 ctx
  * @param {string} userName 用户名
  * @param {string} password 用户密码
@@ -92,9 +98,46 @@ async function deleteCurUser(userName) {
     return new ErrorModel(deleteUserFailInfo)
 }
 
+/**
+ * 修改用户信息
+ * @param {Object} ctx koa ctx
+ * @param {string} nickName 用户昵称
+ * @param {string} city 用户城市
+ * @param {string} picture 头像
+ */
+async function changeInfo(ctx,{nickName,city,picture}){
+    const {userName}=ctx.session.userInfo 
+    if(!nickName){
+        //昵称没有上传的话就默认为用户名
+        nickName=userName
+    }
+    //service层作修改
+    const result=await updateUser({
+        newNickName:nickName,
+        newCity:city,
+        newPicture:picture
+    },{
+        userName
+    })
+
+    if(result){
+        //执行成功
+        Object.assign(ctx.session.userInfo,{
+            nickName,
+            city,
+            picture
+        })
+        return new SuccessModel()
+    }
+    //失败
+    return new ErrorModel(changeInfoFailInfo)
+
+}
+
  module.exports={
      isExist,
      register,
      login,
-     deleteCurUser
+     deleteCurUser,
+     changeInfo
  }

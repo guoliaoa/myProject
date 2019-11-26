@@ -13,6 +13,9 @@
  //文件上传api
  router.post('/upload',loginCheck,koaForm(),async (ctx,next)=>{
      const file=ctx.req.files['file']
+     if(!file){
+         return
+     }
      const {size,path,name,type}=file
      //调用controller层的方法
      ctx.body=await saveFile({

@@ -15,11 +15,11 @@ const {isProd}=require('./conf/db')//判断当前环境
 const {SESSION_SECRET_KEYS}=require('./conf/secretkeys')
 
 //路由
+const blogViewRouter=require('./routes/view/blog')
 const errorViewRouter=require('./routes/view/error')//错误信息页和404页
 const userViewRouter=require('./routes/view/user')
 const userApirouter=require('./routes/api/user')
 const utilsApiRouter=require('./routes/api/utils')
-const index = require('./routes/index')
 
 
 // error handler
@@ -74,7 +74,7 @@ app.use(session({
 // })手写的koa2中间件的功能
 
 // routes  注册
-app.use(index.routes(), index.allowedMethods())
+app.use(blogViewRouter.routes(),blogViewRouter.allowedMethods())
 app.use(userViewRouter.routes(),userViewRouter.allowedMethods())
 app.use(userApirouter.routes(),userApirouter.allowedMethods())
 app.use(utilsApiRouter.routes(),utilsApiRouter.allowedMethods())

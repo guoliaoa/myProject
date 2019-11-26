@@ -106,8 +106,8 @@ async function updateUser({newPassword,newNickName,newCity,newPicture},{password
 
 
  module.exports={
-     getUserInfo,
-     createUser,
-     deleteUser,
-     updateUser
+     getUserInfo,//查
+     createUser,//增
+     deleteUser,//删
+     updateUser//改
  }

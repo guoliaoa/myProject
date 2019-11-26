@@ -52,6 +52,11 @@
     deleteUserFailInfo:{
         errno:10010,
         message:'删除用户失败'
+    },
+    //创建微博失败
+    createBlogFailInfo:{
+        errno:11001,
+        message:'创建微博失败'
     }
 
  }

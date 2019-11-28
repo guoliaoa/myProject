@@ -8,6 +8,7 @@
  const {loginRedirect}=require('../../middlewares/loginChecks')
  const {getProfileBlogList}=require('../../controller/blog-profile')
  const {isExist}=require('../../controller/user')
+ const {getSquareBlogList}=require('../../controller/blog-square')
 
  //首页
  router.get('/',loginRedirect,async (ctx,next)=>{
@@ -60,16 +61,23 @@
             isMe
         }
      })
-    // ctx.body={
-    //     blogData:{
-    //         isEmpty,
-    //         blogList,
-    //         pageSize,
-    //         pageIndex,
-    //         count
-    //     }
-    // }
      
+ })
+
+ //广场
+ router.get('/square',loginRedirect,async (ctx,next)=>{
+     //获取微博数据第一页
+     const result=await getSquareBlogList(0)
+     const {isEmpty,blogList,pageIndex,pageSize,count}=result.data
+     await ctx.render('square',{
+         blogData:{
+             isEmpty,
+             blogList,
+             pageIndex,
+             pageSize,
+             count
+         }
+     })
  })
 
  module.exports=router

@@ -20,7 +20,7 @@
          include:{
              model:UserRelation,
              where:{
-                 followerId
+                 followerId//通过followerId查询出所有的userId,然后在通过userId找到用户信息，这个对应的是User.hansMany(UserRelation,外键是userId)
              }
          }
      })
@@ -31,6 +31,38 @@
      let userList=result.rows.map(row=>row.dataValues)
      userList=formatUser(userList)
 
+     return {
+         count:result.count,
+         userList
+     }
+ }
+
+/**
+ * 获取关注人列表
+ * @param {number} userId userId
+ */
+ async function getFollowersByUser(userId){
+     const result=await UserRelation.findAndCountAll({
+         order:[
+             ['id','desc']
+         ],
+         include:[
+             {
+                 model:User,
+                 attributes:['id','userName','nickName','picture']
+             }
+         ],
+         where:{
+            userId//通过userId查询出所有的followerId,再通过followerId找到用户信息，命中的是UserRelation.belongsTo(User)的关系，它的外键是followerId
+         }
+     })
+     let userList=result.rows.map(row=>row.dataValues)
+     userList=userList.map(item=>{
+         let user=item.user
+         user=user.dataValues
+         user=formatUser(user)
+         return user
+     })
      return {
          count:result.count,
          userList
@@ -68,5 +100,6 @@
  module.exports={
     getUsersByFollower,
     addFollower,
-    deleteFollower
+    deleteFollower,
+    getFollowersByUser
  }

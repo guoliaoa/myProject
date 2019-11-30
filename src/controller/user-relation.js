@@ -3,7 +3,11 @@
  * @author 郭蓼
  */
 
- const {getUsersByFollower,addFollower,deleteFollower}=require('../services/user-relation')
+ const {getUsersByFollower,
+    addFollower,
+    deleteFollower,
+    getFollowersByUser
+}=require('../services/user-relation')
  const {SuccessModel,ErrorModel}=require('../model/ResModel')
  const {addFollowerFailInfo,deleteFollowerFailInfo}=require('../model/ErrorInfo')
 
@@ -16,6 +20,19 @@
      return new SuccessModel({
          count,
          fansList:userList
+     })
+ }
+
+ /**
+  * 根据userid获取关注人列表
+  * @param {number} userId 当前登录用户id
+  */
+ async function getFollowers(userId){
+     //service
+     const {count,userList}=await getFollowersByUser(userId)
+     return new SuccessModel({
+         count,
+         followersList:userList
      })
  }
 
@@ -50,5 +67,6 @@
  module.exports={
     getFans,
     follow,
-    unFollower
+    unFollower,
+    getFollowers
  }

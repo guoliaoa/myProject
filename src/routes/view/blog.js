@@ -9,7 +9,7 @@
  const {getProfileBlogList}=require('../../controller/blog-profile')
  const {isExist}=require('../../controller/user')
  const {getSquareBlogList}=require('../../controller/blog-square')
- const {getFans}=require('../../controller/user-relation')
+ const {getFans,getFollowers}=require('../../controller/user-relation')
 
  //首页
  router.get('/',loginRedirect,async (ctx,next)=>{
@@ -54,6 +54,11 @@
      const fansResult= await getFans(curUserInfo.id)
      const {count:fansCount,fansList}=fansResult.data
 
+     //获取关注人列表
+     //controller
+     const followersResult=await getFollowers(curUserInfo.id)
+     const {count :followersCount,followersList}=followersResult.data
+
      //我是否关注了此人  如果粉丝列表中有我的用户名，那我就关注了此人
      const amIFollowed=fansList.some(item=>{
          return item.userName === myUserName
@@ -73,6 +78,10 @@
             fansData:{
                 count:fansCount,
                 list:fansList
+            },
+            followersData: {
+                count: followersCount,
+                list: followersList
             },
             amIFollowed
         }

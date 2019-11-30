@@ -6,6 +6,7 @@
  
  const {User,UserRelation}=require('../db/model/index')
  const {formatUser}=require('./_format')
+ const Sequelize=require('sequelize')
 
  /**
   * 获取关注该用户的用户列表 ,通过被关注人的id,来获取有多少人关注了这个人，此列表就是这个被关注人粉丝列表
@@ -20,7 +21,10 @@
          include:{
              model:UserRelation,
              where:{
-                 followerId//通过followerId查询出所有的userId,然后在通过userId找到用户信息，这个对应的是User.hansMany(UserRelation,外键是userId)
+                 followerId,//通过followerId查询出所有的userId,然后在通过userId找到用户信息，这个对应的是User.hansMany(UserRelation,外键是userId),
+                 userId:{
+                     [Sequelize.Op.ne]:followerId
+                 }
              }
          }
      })
@@ -53,7 +57,10 @@
              }
          ],
          where:{
-            userId//通过userId查询出所有的followerId,再通过followerId找到用户信息，命中的是UserRelation.belongsTo(User)的关系，它的外键是followerId
+            userId,//通过userId查询出所有的followerId,再通过followerId找到用户信息，命中的是UserRelation.belongsTo(User)的关系，它的外键是followerId
+            followerId:{
+                [Sequelize.Op.ne]:userId
+            }
          }
      })
      let userList=result.rows.map(row=>row.dataValues)

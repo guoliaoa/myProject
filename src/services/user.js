@@ -5,6 +5,7 @@
 
  const {User}=require('../db/model/index')//引用创建的模型
  const {formatUser}=require('./_format')
+ const {addFollower}=require('./user-relation')
 
 
 
@@ -52,7 +53,11 @@
          gender,
          nickName:nickName?nickName:userName
      })
-     return result.dataValues
+     const data=result.dataValues
+     //自己关注自己
+     addFollower(data.id,data.id)
+
+     return data
  }
 
 /**

@@ -54,6 +54,11 @@
      const fansResult= await getFans(curUserInfo.id)
      const {count:fansCount,fansList}=fansResult.data
 
+     //我是否关注了此人  如果粉丝列表中有我的用户名，那我就关注了此人
+     const amIFollowed=fansList.some(item=>{
+         return item.userName === myUserName
+     })
+
      await ctx.render('profile', {
         blogData: {
             isEmpty,
@@ -68,7 +73,8 @@
             fansData:{
                 count:fansCount,
                 list:fansList
-            }
+            },
+            amIFollowed
         }
      })
      

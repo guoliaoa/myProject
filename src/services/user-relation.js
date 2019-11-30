@@ -37,6 +37,36 @@
      }
  }
 
+ /**
+  * 添加关注关系
+  * @param {number} userId 当前用户id
+  * @param {number} followerId 被关注人id
+  */
+ async function addFollower(userId,followerId){
+     const result=await UserRelation.create({
+         userId,
+         followerId
+     })
+     return result.dataValues
+ }
+
+ /**
+  * 删除关注关系
+  * @param {number} userId 当前用户id
+  * @param {number} followerId 要被取消关注人id
+  */
+ async function deleteFollower(userId,followerId){
+     const result =await UserRelation.destroy({
+         where:{
+             userId,
+             followerId
+         }
+     })
+     return result>0
+ }
+
  module.exports={
-    getUsersByFollower
+    getUsersByFollower,
+    addFollower,
+    deleteFollower
  }

@@ -4,6 +4,10 @@
  */
 
  module.exports={
-     USER_NAME:'zhangsan',
-     COOKIE:'weibo.sid=j9lplUPk14sSekedrn5cP0Q3_F95DyBT; weibo.sid.sig=Uj-gcqIiHFZHuUOrv8u-CP3_27A'
+     L_ID:2,
+     L_USER_NAME:'lisi',
+     L_COOKIE:'weibo.sid=I7I-P-0h0wbf6hJb26ObiqNdYqCKjGql; weibo.sid.sig=_SJglKqY-W5guS6EBvaOtjcLyP0',
+     Z_ID:1,
+     Z_USER_NAME:'zhangsan',
+     Z_COOKIE:'weibo.sid=DvbzA343ezUquH8SWp8dyWJeeZLoiWvw; weibo.sid.sig=7dWH3bWD39rKjOHU6w2UEq-OKvk'
  }

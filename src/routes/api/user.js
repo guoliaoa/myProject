@@ -18,6 +18,7 @@
  const {genValidator}=require('../../middlewares/validator')
  const {isTest}=require('../../utils/env')
  const {loginCheck}=require('../../middlewares/loginChecks')
+ const {getFollowers}=require('../../controller/user-relation')
 
  //注册路由  注册
  router.post('/register',genValidator(userValidate),async (ctx,next)=>{
@@ -77,5 +78,18 @@ router.post('/logout',loginCheck,async (ctx,next)=>{
     //调用controller层的方法
     ctx.body=await logout(ctx)
 })
+
+//@功能  获取关注人列表
+router.get('/getAtList', loginCheck, async (ctx, next) => {
+    const { id: userId } = ctx.session.userInfo
+    const result = await getFollowers(userId)
+    const { followersList } = result.data
+    const list = followersList.map(user => {
+        return `${user.nickName} - ${user.userName}`
+    })
+    // 格式如 ['张三 - zhangsan', '李四 - lisi', '昵称 - userName']
+    ctx.body = list
+})
+
 
  module.exports=router

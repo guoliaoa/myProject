@@ -21,3 +21,17 @@
      expect(res.body.data.image).toBe(image)
      BLOG_ID=res.body.data.id
  })
+
+ 
+test('首页，加载第一页数据', async () => {
+    const res = await server
+                    .get(`/api/blog/loadMore/0`)
+                    .set('cookie', L_COOKIE)  // 设置 cookie
+    expect(res.body.errno).toBe(0)
+    const data = res.body.data
+    expect(data).toHaveProperty('isEmpty')
+    expect(data).toHaveProperty('blogList')
+    expect(data).toHaveProperty('pageSize')
+    expect(data).toHaveProperty('pageIndex')
+    expect(data).toHaveProperty('count')
+})

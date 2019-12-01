@@ -3,7 +3,7 @@
  * @author 郭蓼
  */
 
- const {Blog,User}=require('../db/model/index')
+ const {Blog,User,UserRelation}=require('../db/model/index')
  const {formatUser,formatBlog}=require('./_format')
 
 
@@ -64,8 +64,45 @@
     }
  }
 
+ /**
+  * 获取关注人微博列表（首页）
+  * @param {Object} param0 查询条件
+  */
+ async function getFollowersBlogList({ userId, pageIndex = 0, pageSize = 10 }) {
+    const result = await Blog.findAndCountAll({
+        limit: pageSize, // 每页多少条
+        offset: pageSize * pageIndex, // 跳过多少条
+        order: [
+            ['id', 'desc']
+        ],
+        include: [
+            {
+                model: User,
+                attributes: ['userName', 'nickName', 'picture']
+            },
+            {
+                model: UserRelation,
+                attributes: ['userId', 'followerId'],
+                where: { userId }//通过userId查询出的就是这个用户对应的所有关注人foloowerId,然后再通过这个followerId被关注人的id查询出blog,对应方法就是因为followerId和blog表有外键关系
+            }
+        ]
+    })
 
+    // 格式化数据
+    let blogList = result.rows.map(row => row.dataValues)
+    blogList = formatBlog(blogList)
+    blogList = blogList.map(blogItem => {
+        blogItem.user = formatUser(blogItem.user.dataValues)
+        return blogItem
+    })
+
+    return {
+        count: result.count,
+        blogList
+    }
+}
  module.exports={
      createBlog,
-     getBlogListByUser
+     getBlogListByUser,
+     getFollowersBlogList
  }

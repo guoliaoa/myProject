@@ -11,7 +11,7 @@
  const {getSquareBlogList}=require('../../controller/blog-square')
  const {getFans,getFollowers}=require('../../controller/user-relation')
  const {getHomeBlogList}=require('../../controller/blog-home')
- const {getAtMeCount}=require('../../controller/blog-at')
+ const {getAtMeCount,getAtMeBlogList}=require('../../controller/blog-at')
 
  //首页
  router.get('/',loginRedirect,async (ctx,next)=>{
@@ -100,7 +100,7 @@
      const {count :followersCount,followersList}=followersResult.data
 
      //获取@数量
-    const atCountResult=await getAtMeCount(myUserInfo.userId)
+    const atCountResult=await getAtMeCount(myUserInfo.id)
     const {count:atCount}=atCountResult.data
 
      //我是否关注了此人  如果粉丝列表中有我的用户名，那我就关注了此人
@@ -149,5 +149,33 @@
          }
      })
  })
+
+ //atMe路由
+ router.get('/at-me', loginRedirect, async (ctx, next) => {
+    const { id: userId } = ctx.session.userInfo
+
+    // 获取 @ 数量
+    const atCountResult = await getAtMeCount(userId)
+    const { count: atCount } = atCountResult.data
+
+    // 获取第一页列表
+    const result = await getAtMeBlogList(userId)
+    const { isEmpty, blogList, pageSize, pageIndex, count } = result.data
+
+    // 渲染页面
+    await ctx.render('atMe', {
+        atCount,
+        blogData: {
+            isEmpty,
+            blogList,
+            pageSize,
+            pageIndex,
+            count
+        }
+    })
+
+    // 标记为已读
+
+})
 
  module.exports=router

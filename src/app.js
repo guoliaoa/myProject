@@ -15,6 +15,7 @@ const {isProd}=require('./conf/db')//判断当前环境
 const {SESSION_SECRET_KEYS}=require('./conf/secretkeys')
 
 //路由
+const atMeApiRouter=require('./routes/api/blog-at')
 const squareApiRouter=require('./routes/api/blog-square')
 const profileApiRouter=require('./routes/api/blog-profile')
 const homeApiRouter=require('./routes/api/blog-home')
@@ -77,6 +78,7 @@ app.use(session({
 // })手写的koa2中间件的功能
 
 // routes  注册
+app.use(atMeApiRouter.routes(),atMeApiRouter.allowedMethods())
 app.use(squareApiRouter.routes(),squareApiRouter.allowedMethods())
 app.use(profileApiRouter.routes(),profileApiRouter.allowedMethods())
 app.use(homeApiRouter.routes(),homeApiRouter.allowedMethods())

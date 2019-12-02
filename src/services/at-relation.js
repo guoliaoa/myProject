@@ -17,6 +17,21 @@
      return result.dataValues
  }
 
+ /**
+  * 获取 @ userId用户的微博数量
+  * @param {number} userId 用户id
+  */
+ async function getRelationCount(userId){
+     const result = await AtRelation.findAndCountAll({
+         where:{
+             userId,
+             isRead:false
+         }
+     })
+     return result.count
+ }
+
  module.exports={
-    createAtRelation
+    createAtRelation,
+    getRelationCount
  }

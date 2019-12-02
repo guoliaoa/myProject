@@ -11,6 +11,7 @@
  const {getSquareBlogList}=require('../../controller/blog-square')
  const {getFans,getFollowers}=require('../../controller/user-relation')
  const {getHomeBlogList}=require('../../controller/blog-home')
+ const {getAtMeCount}=require('../../controller/blog-at')
 
  //首页
  router.get('/',loginRedirect,async (ctx,next)=>{
@@ -30,6 +31,10 @@
     const followersResult = await getFollowers(userId)
     const { count: followersCount, followersList } = followersResult.data
 
+    //获取@数量
+    const atCountResult=await getAtMeCount(userId)
+    const {count:atCount}=atCountResult.data
+
      await ctx.render('index',{
         userData: {
             userInfo,
@@ -40,7 +45,8 @@
             followersData: {
                 count: followersCount,
                 list: followersList
-            }
+            },
+            atCount
         },
         blogData:{
             isEmpty,
@@ -93,6 +99,10 @@
      const followersResult=await getFollowers(curUserInfo.id)
      const {count :followersCount,followersList}=followersResult.data
 
+     //获取@数量
+    const atCountResult=await getAtMeCount(myUserInfo.userId)
+    const {count:atCount}=atCountResult.data
+
      //我是否关注了此人  如果粉丝列表中有我的用户名，那我就关注了此人
      const amIFollowed=fansList.some(item=>{
          return item.userName === myUserName
@@ -117,7 +127,8 @@
                 count: followersCount,
                 list: followersList
             },
-            amIFollowed
+            amIFollowed,
+            atCount
         }
      })
      

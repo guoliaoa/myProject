@@ -54,6 +54,18 @@
      expect(hasUserName).toBe(true)
  })
 
+ //获取李四的at列表，应该有张三
+ test('获取李四的at列表，应该有张三',async ()=>{
+     const res=await server
+                     .get('/api/user/getAtList')
+                     .set('cookie',L_COOKIE)
+    const atList=res.body
+    const hasUserName=atList.some(item=>{
+        return item.indexOf(`- ${Z_USER_NAME}`)>0
+    })
+    expect(hasUserName).toBe(true)
+ })
+
  //取消关注
  test('李四取消关注张三，应该成功',async ()=>{
     const res=await server

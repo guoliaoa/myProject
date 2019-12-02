@@ -3,7 +3,10 @@
  * @author 郭蓼
  */
 
- const {getRelationCount,getAtUserBlogList}=require('../services/at-relation')
+ const {getRelationCount,
+        getAtUserBlogList,
+        updateAtRelation
+}=require('../services/at-relation')
  const {SuccessModel}=require('../model/ResModel')
  const {PAGE_SIZE}=require('../conf/constant')
 
@@ -41,7 +44,20 @@
     })
 }
 
+/**
+ * 标记为已读
+ * @param {number} userId 用户id
+ */
+async function markAsRead(userId){
+    try{
+        await updateAtRelation({newIsRead:true},{userId,isRead:false})
+    }catch(ex){
+        console.error(ex)
+    }
+}
+
  module.exports={
     getAtMeCount,
-    getAtMeBlogList
+    getAtMeBlogList,
+    markAsRead
  }

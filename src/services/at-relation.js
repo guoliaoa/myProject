@@ -73,8 +73,42 @@
         blogList
     }
 }
+
+/**
+ * 标记为已读
+ * @param {Object} param0 需要更新的内容对象
+ * @param {Object} param1 条件对象
+ */
+async function updateAtRelation(
+    {newIsRead},//需要更新的内容
+    {userId,isRead}
+){
+    //拼接更新内容
+    const updateDate={}
+    if(newIsRead){
+        updateDate.isRead=newIsRead
+    }
+    //拼接查询条件
+    const whereOpt={}
+    if(userId){
+        whereOpt.userId=userId
+    }
+    if(isRead){
+        whereOpt.isRead=isRead
+    }
+    //执行更新
+    const result=await AtRelation.update(updateDate,{
+        where:whereOpt
+    })
+    return result[0]>0
+
+
+}
+
+
  module.exports={
     createAtRelation,
     getRelationCount,
-    getAtUserBlogList
+    getAtUserBlogList,
+    updateAtRelation
  }

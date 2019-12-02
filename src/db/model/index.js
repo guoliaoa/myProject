@@ -6,6 +6,7 @@
  const User=require('./User')
  const Blog=require('./Blog')
  const UserRelation=require('./UserRelation')
+ const AtRelation=require('./AtRelation')
 
  //创建外键关系，许多blogs属于一个user,可以通过查询微博来查询出对应的用户
  Blog.belongsTo(User,{
@@ -25,8 +26,13 @@
      targetKey:'followerId'
  })
 
+ Blog.hasMany(AtRelation,{
+     foreignKey:'blogId'
+ })
+
  module.exports={
      User,
      Blog,
-     UserRelation
+     UserRelation,
+     AtRelation
  }
